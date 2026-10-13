@@ -12,6 +12,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
+from . import trim
 from .const import DOMAIN, SCAN_INTERVAL, TADO_DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -106,6 +107,7 @@ class TadoQuotaSensor(SensorEntity):
             entry_type=DeviceEntryType.SERVICE,
         )
         self._quota: Quota | None = None
+        self._saved: int | None = None
 
     @property
     def available(self) -> bool:
@@ -127,10 +129,16 @@ class TadoQuotaSensor(SensorEntity):
             "used_percent": round(100 * self._quota.used / self._quota.limit, 1)
             if self._quota.limit
             else None,
+            # Polling trim (option): on, and the calls served from its cache
+            # since the Tado integration last loaded.
+            "polling_trimmed": self._saved is not None,
+            "calls_saved": self._saved,
         }
 
     async def async_update(self) -> None:
         self._quota = read_quota(self.hass, self._tado_entry_id)
+        entry = self.hass.config_entries.async_get_entry(self._tado_entry_id)
+        self._saved = trim.calls_saved(trim.client_of(entry)) if entry else None
 
 
 __all__ = ["SCAN_INTERVAL"]  # read by Home Assistant to set the polling rate

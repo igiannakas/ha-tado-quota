@@ -13,8 +13,28 @@
   },
   "entity": {
     "sensor": {
-      "remaining": { "name": "Remaining" },
-      "used": { "name": "Used" }
+      "remaining": {
+        "name": "Remaining"
+      },
+      "used": {
+        "name": "Used"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tado API quota",
+        "description": "Optionally cut the Tado API calls each Tado refresh makes. Device temperature offsets, zone default overlays and the home's details change only when you edit them in the Tado app, yet Home Assistant reads them on every refresh (for a home with 6 devices and 6 zones, 13 of its 19 calls). With the trim on they are read once and then every few hours, and the device list once per refresh instead of twice. An offset set with Tado's 'set temperature offset' action is read again at the next refresh.",
+        "data": {
+          "trim_polling": "Trim Tado polling",
+          "static_refresh_h": "Re-read static data every"
+        },
+        "data_description": {
+          "trim_polling": "Wraps the Tado integration's client in memory; turning it off restores it. If a Home Assistant update changes the client, the trim stays off and polling is as before.",
+          "static_refresh_h": "How old the cached offsets, overlay defaults and home details may get."
+        }
+      }
     }
   }
 }
