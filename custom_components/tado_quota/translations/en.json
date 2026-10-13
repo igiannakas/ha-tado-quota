@@ -1,0 +1,20 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tado API quota",
+        "description": "Adds sensors for the Tado API calls remaining and used in the current daily window, for every Tado home in Home Assistant. They read what the Tado integration already knows, so they make no Tado calls."
+      }
+    },
+    "abort": {
+      "no_tado": "Set up the Tado integration first.",
+      "single_instance_allowed": "Tado API quota is already set up."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "remaining": { "name": "Remaining" },
+      "used": { "name": "Used" }
+    }
+  }
+}
